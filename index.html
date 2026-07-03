@@ -4,25 +4,35 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Lamp Login Page</title>
+    <title>Pull Cord Lamp Login</title>
     <link rel="stylesheet" href="css/style.css" />
 </head>
 
 <body>
-    <div class="container">
-        <div class="lamp"></div>
-        <div class="light"></div>
+    <main class="scene">
+        <section class="lamp-area">
+            <div class="lamp">
+                <div class="stem"></div>
+                <div class="shade"></div>
+                <div class="bulb"></div>
 
-        <div class="login-box">
-            <h2>Login</h2>
+                <div class="cord" id="cord"></div>
+            </div>
+
+
+        </section>
+
+        <section class="login-box" id="loginBox">
+            <p class="welcome">WELCOME BACK</p>
+            <h1>Login</h1>
 
             <form>
-                <input type="email" placeholder="Enter Gmail" required />
-                <input type="password" placeholder="Enter Password" required />
+                <input type="email" placeholder="Enter your Gmail" required />
+                <input type="password" placeholder="Enter your Password" required />
                 <button type="submit">Login</button>
             </form>
-        </div>
-    </div>
+        </section>
+    </main>
 
     <script src="js/script.js"></script>
 </body>

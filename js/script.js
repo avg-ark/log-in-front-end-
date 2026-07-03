@@ -1,56 +1,59 @@
 const cord = document.getElementById("cord");
-const form = document.querySelector("form");
 
-let isDragging = false;
+let lampOn = false;
+let dragging = false;
 let startY = 0;
-let currentY = 0;
+let pull = 0;
+
+const clickSound = new Audio("assets/audio/click.mp3");
+clickSound.volume = 0.6;
 
 cord.addEventListener("mousedown", startDrag);
-document.addEventListener("mousemove", dragCord);
+document.addEventListener("mousemove", drag);
 document.addEventListener("mouseup", stopDrag);
 
-cord.addEventListener("touchstart", startDrag);
-document.addEventListener("touchmove", dragCord);
+cord.addEventListener("touchstart", startDrag, { passive: false });
+document.addEventListener("touchmove", drag, { passive: false });
 document.addEventListener("touchend", stopDrag);
 
-function startDrag(event) {
-    isDragging = true;
-    startY = getY(event);
+function startDrag(e) {
+    dragging = true;
+    startY = getY(e);
     cord.style.transition = "none";
 }
 
-function dragCord(event) {
-    if (!isDragging) return;
+function drag(e) {
+    if (!dragging) return;
 
-    currentY = getY(event) - startY;
+    e.preventDefault();
 
-    if (currentY < 0) currentY = 0;
-    if (currentY > 120) currentY = 120;
+    pull = getY(e) - startY;
+    pull = Math.max(0, Math.min(110, pull));
 
-    cord.style.transform = `translateX(-50%) translateY(${currentY}px)`;
-
-    if (currentY > 75) {
-        document.body.classList.add("light-on");
-    }
+    cord.style.height = 180 + pull + "px";
 }
 
 function stopDrag() {
-    if (!isDragging) return;
+    if (!dragging) return;
 
-    isDragging = false;
-    cord.style.transition = "0.5s ease";
-    cord.style.transform = "translateX(-50%) translateY(0)";
-}
+    dragging = false;
 
-function getY(event) {
-    if (event.touches) {
-        return event.touches[0].clientY;
+    if (pull > 70) {
+        lampOn = !lampOn;
+
+        clickSound.currentTime = 0;
+        clickSound.play().catch(() => { });
+
+        setTimeout(() => {
+            document.body.classList.toggle("light-on", lampOn);
+        }, 120);
     }
 
-    return event.clientY;
+    cord.style.transition = "0.45s ease";
+    cord.style.height = "180px";
+    pull = 0;
 }
 
-form.addEventListener("submit", function (event) {
-    event.preventDefault();
-    alert("Login clicked");
-});
+function getY(e) {
+    return e.touches ? e.touches[0].clientY : e.clientY;
+}
